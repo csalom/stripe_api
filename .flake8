@@ -1,0 +1,10 @@
+[flake8]
+max-line-length = 120
+max-complexity = 10
+exclude =
+    # Skip any hidden directories
+    .*/,
+    manage.py,
+    main/wsgi.py,
+    *__init__.py,
+    *migrations/*

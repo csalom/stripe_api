@@ -1,0 +1,32 @@
+version: "3.3"
+
+services:
+  db:
+    container_name: db_postgresql13
+    image: postgres:13
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+  stripe_api:
+    build: .
+    environment:
+      - DEBUG=False
+      - DATABASE_NAME=stripe
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - STRIPE_API_KEY=sk_test_51JQre3LPRv6YiPbzrxtDhlQgJJsorsP03tyHm2uMXtXV1aXguNo5EGvMnWlhCzepc8bimKL5U2W6UoFsihzIoRUX00D7DqFOy5
+      - STRIPE_WEBHOOK_SECRET=whsec_PR3otHxPqif8uREXnzL2BN2rce8Ij8Y0
+    command: python src/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
